@@ -1,0 +1,19 @@
+{
+  "name": "node-modules",
+  "version": "1.1.0",
+  "description": "Not very useful bot that plays the intro song of the person, who sent the intro command.",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "KingKeviiin",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "fs": "0.0.1-security",
+    "opus": "0.0.0",
+    "opusscript": "0.0.8",
+    "yt-search": "^2.7.4",
+    "ytdl-core": "^4.5.0"
+  }
+}
