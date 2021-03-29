@@ -175,7 +175,7 @@ const choose_outro = (message) => {
 			//message.channel.send("gefunden");
 			break;
 		case ids.Basti:
-			//message.channel.send("gefunden");
+			return links.Basti_outro[Math.floor(Math.random() * links.Basti_outro.length)];
 			break;
 		case ids.Moritz:
 			break;
