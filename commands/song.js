@@ -146,8 +146,7 @@ const choose_intro = (message) => {
 			//message.channel.send("gefunden");
 			break;
 		case ids.Basti:
-			//message.channel.send("gefunden");
-			break;
+			return links.Basti_outro[Math.floor(Math.random() * links.Kevin_outro.length)];
 		case ids.Christian:
 			random = Math.floor(Math.random() * links.Christian_intro.length);
 			if(random === 0) seek = 60;
@@ -175,7 +174,6 @@ const choose_outro = (message) => {
 			//message.channel.send("gefunden");
 			break;
 		case ids.Basti:
-			return links.Basti_outro[Math.floor(Math.random() * links.Basti_outro.length)];
 			break;
 		case ids.Moritz:
 			break;
