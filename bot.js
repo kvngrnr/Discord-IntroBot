@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+require('dotenv').config();
 
 // Initialize Discord client
 const client = new Discord.Client({partials: ["MESSAGE", "CHANNEL", "REACTION"]});
@@ -11,4 +12,4 @@ client.events = new Discord.Collection();
 	require(`./handlers/${handler}`)(client, Discord);
 })
 
-client.login("ODIxNzY3NDQ0MDQwNTE1NTk0.YFIgkg.OMCpyVDnpFyhKywDQDzFoqaShS8");
+client.login(process.env.BOT_TOKEN);
