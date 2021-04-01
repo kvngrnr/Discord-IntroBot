@@ -142,7 +142,7 @@ const choose_intro = (message) => {
 	switch(id) {
 		case ids.Kevin:
 			random = Math.floor(Math.random() * links.Kevin_intro.length);
-			if(random === 4) seek = 45;
+			if(random === 4) seek = 47;
 			return links.Kevin_intro[random];
 		case ids.Michelle:
 			//message.channel.send("gefunden");
