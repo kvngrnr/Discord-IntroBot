@@ -141,7 +141,9 @@ const choose_intro = (message) => {
 	const id = message.author.id;
 	switch(id) {
 		case ids.Kevin:
-			return links.Kevin_intro[Math.floor(Math.random() * links.Kevin_intro.length)];
+			random = Math.floor(Math.random() * links.Kevin_intro.length
+			if(random === 4) seek = 45;
+			return links.Kevin_intro[random];
 		case ids.Michelle:
 			//message.channel.send("gefunden");
 			break;
