@@ -27,7 +27,7 @@ module.exports = {
 				let song = {};
 				seek = 0;
 				song = await get_song_info(args, message, song);
-				await set_server_queue(server_queue, voice_channel, message, song);
+				if(song) await set_server_queue(server_queue, voice_channel, message, song);
 				break;
 			case "skip":
 			case "forceskip":
@@ -41,11 +41,11 @@ module.exports = {
 				break;
 		  	case "intro":
 				seek = 0;
-			  	intro_link = [choose_intro(message)]; //must be in array cause of get_song_info -> args array
+			  	intro_link = [choose_intro(message, args)]; //must be in array cause of get_song_info -> args array
 				if(intro_link != "") {
 					let intro_song = {};
 					intro_song = await get_song_info(intro_link, message, intro_song);
-					await set_server_queue(server_queue, voice_channel, message, intro_song);
+					if (intro_song) await set_server_queue(server_queue, voice_channel, message, intro_song);
 				}
 				break;
 			case "outro":
@@ -54,7 +54,7 @@ module.exports = {
 				if(outro_link != "") {
 					let outro_song = {};
 					outro_song = await get_song_info(outro_link, message, outro_song);
-					await set_server_queue(server_queue, voice_channel, message, outro_song);
+					if(outro_song) await set_server_queue(server_queue, voice_channel, message, outro_song);
 				}
 				break;
 		 }
@@ -66,15 +66,21 @@ const get_song_info = async(args, message, song) => {
 		const song_info = await ytdl.getInfo(args[0]);
 		return song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url }
 	} else {
-		const video_finder = async (query) => {
-			const videoResult = await ytSearch(query);
-			return (videoResult.videos.length > 1) ? videoResult.videos[0] : null;
-		}
-		const video = await video_finder(args.join(" "));
-		if(video) {
-			return song = { title: video.title, url: video.url }
-		} else {
-			return message.channel.send("**Video nicht gefunden** :sweat:");
+		try {
+			const video_finder = async (query) => {
+				videoResult = await ytSearch(query);
+				return (videoResult.videos.length > 1) ? videoResult.videos[0] : null;
+			}
+			const video = await video_finder(args.join(" "));
+			if(video) {
+				return song = { title: video.title, url: video.url }
+			} else {
+				return message.channel.send("**Video nicht gefunden** :sweat:");
+			}
+		} catch (e) {
+			console.log(e);
+			message.channel.send("Irgendwas ist schief gelaufen, kein Plan was");
+			return;
 		}
 	}
 }
@@ -112,7 +118,7 @@ const video_player = async(guild, song) => {
 		return;
 	}
 	const stream = ytdl(song.url, {filter: "audioonly"});
-	console.log("seek: " + seek + " bei " + song.title);
+	console.log("Now Playing: " + song.title + " (seek: " + seek + ")");
 	song_queue.connection.play(stream, {seek: seek, volume: 1})
 	.on('finish', () => {
 		song_queue.songs.shift();
@@ -137,10 +143,14 @@ const stop_song = (message, server_queue) => {
 	server_queue.connection.dispatcher.end();
 }
 
-const choose_intro = (message) => {
+const choose_intro = (message, args) => {
 	const id = message.author.id;
 	switch(id) {
 		case ids.Kevin:
+			if (Number.isInteger(parseInt(args[0], 10))) {
+				if (args[0] == 5) seek = 47;
+				return links.Kevin_intro[args[0] - 1];
+			} 
 			random = Math.floor(Math.random() * links.Kevin_intro.length);
 			if(random === 4) seek = 47;
 			return links.Kevin_intro[random];
@@ -148,16 +158,32 @@ const choose_intro = (message) => {
 			//message.channel.send("gefunden");
 			break;
 		case ids.Basti:
-			return links.Basti_intro[Math.floor(Math.random() * links.Basti_intro.length)];
+			if (Number.isInteger(parseInt(args[0], 10))) {
+				return links.Basti_intro[args[0] - 1];
+			} 
+			random = Math.floor(Math.random() * links.Basti_intro.length);
+			return links.Basti_intro[random];
 		case ids.Christian:
+			if (Number.isInteger(parseInt(args[0], 10))) {
+				if(args[0] == 1) seek = 60;
+				if(args[0] == 2) seek = 38;
+				return links.Christian_intro[args[0] - 1];
+			} 
 			random = Math.floor(Math.random() * links.Christian_intro.length);
 			if(random === 0) seek = 60;
 			if(random === 1) seek = 38;
 			return links.Christian_intro[random];
 		case ids.Moritz:
-			return links.Moritz_intro[Math.floor(Math.random() * links.Moritz_intro.length)];
-			break;
+			if (Number.isInteger(parseInt(args[0], 10))) {
+				return links.Moritz_intro[args[0] - 1];
+			} 
+			random = Math.floor(Math.random() * links.Moritz_intro.length);
+			return links.Moritz_intro[random];
 		case ids.Eric:
+			if (Number.isInteger(parseInt(args[0], 10))) {
+				if(args[0] === 1) seek = 20;
+				return links.Eric_intro[args[0] - 1];
+			}
 			random = Math.floor(Math.random() * links.Eric_intro.length);
 			if(random === 0) seek = 20;
 			return links.Eric_intro[random];
