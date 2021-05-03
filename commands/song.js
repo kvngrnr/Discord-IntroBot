@@ -149,10 +149,12 @@ const choose_intro = (message, args) => {
 		case ids.Kevin:
 			if (Number.isInteger(parseInt(args[0], 10))) {
 				if (args[0] == 4) seek = 47;
+				if (args[0] == 5) seek = 45;
 				return links.Kevin_intro[args[0] - 1];
 			}
 			random = Math.floor(Math.random() * links.Kevin_intro.length);
 			if(random === 3) seek = 47;
+			if(random === 3) seek = 45;
 			return links.Kevin_intro[random];
 		case ids.Michelle:
 			//message.channel.send("gefunden");
@@ -175,7 +177,7 @@ const choose_intro = (message, args) => {
 			if(random === 0) seek = 60;
 			if(random === 1) seek = 38;
 			if(random === 4) seek = 21;
-			if(random === 6) seek = 39;
+			if(random === 5) seek = 39;
 			return links.Christian_intro[random];
 		case ids.Moritz:
 			if (Number.isInteger(parseInt(args[0], 10))) {
