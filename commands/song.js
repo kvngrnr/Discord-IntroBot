@@ -171,6 +171,7 @@ const choose_intro = (message, args) => {
 				if(args[0] == 2) seek = 38;
 				if(args[0] == 5) seek = 21;
 				if(args[0] == 6) seek = 39;
+				if(args[0] == 10)seek =  6;
 				return links.Christian_intro[args[0] - 1];
 			}
 			random = Math.floor(Math.random() * links.Christian_intro.length);
@@ -178,6 +179,7 @@ const choose_intro = (message, args) => {
 			if(random === 1) seek = 38;
 			if(random === 4) seek = 21;
 			if(random === 5) seek = 39;
+			if(random === 9) seek =  6;
 			return links.Christian_intro[random];
 		case ids.Moritz:
 			if (Number.isInteger(parseInt(args[0], 10))) {
