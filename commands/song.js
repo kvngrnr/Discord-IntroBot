@@ -6,6 +6,9 @@ const links = require('../data/links.json');
 const queue = new Map();
 var seek = 0;
 
+const notinchannel = "**Du musst in einem Sprachkanal sein, um diesen Befehl auszuführen** :person_facepalming:"
+const permissionmissing = "**Du hast nicht die nötigen Berechtigungen** :pinching_hand:"
+
 module.exports = {
     name: 'song',
 	aliases: ["play", "skip", "forceskip", "fs", "leave", "disconnect", "dc", "intro", "outro"],
@@ -13,10 +16,10 @@ module.exports = {
     async execute(message, args, cmd, client, Discord) {
 
 		const voice_channel = message.member.voice.channel;
-		if(!voice_channel) return message.channel.send("**Du musst in einem Sprachkanal sein, um diesen Befehl auszuführen, du kek** :person_facepalming:");
+		if(!voice_channel) return message.channel.send(notinchannel);
 		const permissions = voice_channel.permissionsFor(message.client.user);
-		if(!permissions.has("CONNECT")) return message.channel.send("**Du hast nicht die nötigen Berechtigungen** :pinching_hand:");
-		if(!permissions.has("SPEAK")) return message.channel.send("**Du hast nicht die nötigen Berechtigungen** :pinching_hand:");
+		if(!permissions.has("CONNECT")) return message.channel.send(permissionmissing);
+		if(!permissions.has("SPEAK")) return message.channel.send(permissionmissing);
 
 		const server_queue = queue.get(message.guild.id);
 
@@ -95,7 +98,6 @@ const set_server_queue = async(server_queue, voice_channel, message, song) => {
 		}
 		queue.set(message.guild.id, queue_constructor);
 		queue_constructor.songs.push(song);
-
 		try {
 			const connection = await voice_channel.join();
 			queue_constructor.connection = connection;
@@ -128,7 +130,7 @@ const video_player = async(guild, song) => {
 }
 
 const skip_song = (message, server_queue) => {
-	if(!message.member.voice.channel) return message.channel.send("**Du musst in einem Sprachkanal sein, um diesen Befehl auszuführen, du kek** :person_facepalming:");
+	if(!message.member.voice.channel) return message.channel.send(notinchannel);
 	if(!server_queue) {
 		return message.channel.send("**Es laufen aktuell keine Songs** :unamused:")
 	}
@@ -137,10 +139,14 @@ const skip_song = (message, server_queue) => {
 }
 
 const stop_song = (message, server_queue) => {
-	if(!message.member.voice.channel) return message.channel.send("**Du musst in einem Sprachkanal sein, um diesen Befehl auszuführen, du kek** :person_facepalming:");
-	server_queue.songs = [];
-	message.channel.send("**okö tschau**");
-	server_queue.connection.dispatcher.end();
+	if(!message.member.voice.channel) return message.channel.send(notinchannel);
+	if(server_queue) {
+		server_queue.songs = [];
+		message.channel.send("**okö tschau**");
+		server_queue.connection.dispatcher.end();
+	} else {
+		return message.channel.send("Es werden gerade keine Lieder gespielt");
+	}
 }
 
 const choose_intro = (message, args) => {
@@ -148,13 +154,13 @@ const choose_intro = (message, args) => {
 	switch(id) {
 		case ids.Kevin:
 			if (Number.isInteger(parseInt(args[0], 10))) {
-				if (args[0] == 4) seek = 47;
-				if (args[0] == 5) seek = 45;
+				if (args[0] == 3) seek = 47;
+				if (args[0] == 4) seek = 45;
 				return links.Kevin_intro[args[0] - 1];
 			}
 			random = Math.floor(Math.random() * links.Kevin_intro.length);
-			if(random === 3) seek = 47;
-			if(random === 4) seek = 45;
+			if(random === 2) seek = 47;
+			if(random === 3) seek = 45;
 			return links.Kevin_intro[random];
 		case ids.Michelle:
 			//message.channel.send("gefunden");
