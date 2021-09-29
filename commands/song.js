@@ -84,11 +84,12 @@ const get_song_info = async(args, message, song) => {
 			if(video) {
 				return song = { title: video.title, url: video.url }
 			} else {
-				return message.channel.send("**Video nicht gefunden** :sweat:");
+				message.channel.send("**Video nicht gefunden** :sweat:");
+				return
 			}
 		} catch (e) {
 			console.log(e);
-			message.channel.send("Irgendwas ist schief gelaufen, kein Plan was");
+			message.channel.send("Fehler beim Suchen des Liedes");
 			return;
 		}
 	}
