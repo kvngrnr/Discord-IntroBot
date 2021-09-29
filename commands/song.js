@@ -29,6 +29,12 @@ module.exports = {
 				if (!args.length) return message.channel.send("**Was soll ich denn spielen?** :person_shrugging:");
 				let song = {};
 				seek = 0;
+				if (args[args.length - 1].match(/seek.*/)) {
+					var seekstring = args[args.length - 1].split(":")
+					if (Number.isInteger(parseInt(seekstring[1], 10))) {
+						seek = seekstring[1]
+					}
+				}
 				song = await get_song_info(args, message, song);
 				if(song) await set_server_queue(server_queue, voice_channel, message, song);
 				break;
